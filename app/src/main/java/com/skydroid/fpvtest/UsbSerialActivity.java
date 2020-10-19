@@ -6,12 +6,14 @@ import android.hardware.usb.UsbDevice;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.skydroid.android.usbserial.DeviceFilter;
 import com.skydroid.android.usbserial.USBMonitor;
+import com.skydroid.fpvlibrary.enums.PTZAction;
 import com.skydroid.fpvlibrary.usbserial.UsbSerialConnection;
 import com.skydroid.fpvlibrary.usbserial.UsbSerialControl;
 import com.skydroid.fpvlibrary.utils.BusinessUtils;
@@ -32,7 +34,7 @@ public class UsbSerialActivity extends AppCompatActivity {
     //Usb设备
     private UsbDevice mUsbDevice;
 
-    private GLHttpVideoSurface mFPVVideoView;
+    private GLHttpVideoSurface mPreviewDualVideoView;
 
     //视频渲染
     private FPVVideoClient mFPVVideoClient;
@@ -59,8 +61,14 @@ public class UsbSerialActivity extends AppCompatActivity {
     }
 
     private void initView(){
-        mFPVVideoView = findViewById(R.id.fPVVideoView);
-        mFPVVideoView.init();
+        mPreviewDualVideoView = findViewById(R.id.fPVVideoView);
+        mPreviewDualVideoView.init();
+        findViewById(R.id.btnTest).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mUsbSerialControl.AkeyControl(PTZAction.DOWN);
+            }
+        });
     }
 
     private void init(){
@@ -71,7 +79,6 @@ public class UsbSerialActivity extends AppCompatActivity {
             public void onH264Received(byte[] bytes, int paySize) {
                 //视频数据
                 if(mFPVVideoClient != null){
-//                    Log.e("onH264Received®",new String(bytes));
                     mFPVVideoClient.received(bytes,4,paySize);
                 }
             }
@@ -108,20 +115,22 @@ public class UsbSerialActivity extends AppCompatActivity {
             //视频相关
             @Override
             public void renderI420(byte[] frame, int width, int height) {
-                mFPVVideoView.renderI420(frame,width,height);
+                mPreviewDualVideoView.renderI420(frame,width,height);
             }
 
             @Override
             public void setVideoSize(int picWidth, int picHeight) {
-                mFPVVideoView.setVideoSize(picWidth,picHeight,mainHanlder);
+                mPreviewDualVideoView.setVideoSize(picWidth,picHeight,mainHanlder);
             }
 
             @Override
             public void resetView() {
-                mFPVVideoView.resetView(mainHanlder);
+                mPreviewDualVideoView.resetView(mainHanlder);
             }
         });
 
+        //FPV控制
+        mUsbSerialControl = new UsbSerialControl(mUsbSerialConnection);
 
         mUSBMonitor = new USBMonitor(mContext,mOnDeviceConnectListener);
         List<DeviceFilter> deviceFilters = DeviceFilter.getDeviceFilters(mContext, R.xml.device_filter);

@@ -5,11 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.skydroid.fpvlibrary.enums.PTZAction;
 import com.skydroid.fpvlibrary.serial.SerialPortConnection;
+import com.skydroid.fpvlibrary.serial.SerialPortControl;
 import com.skydroid.fpvlibrary.video.FPVVideoClient;
 import com.skydroid.fpvlibrary.widget.GLHttpVideoSurface;
 
@@ -20,13 +23,16 @@ import java.io.IOException;
  */
 public class H12VideoSamplesActivity extends AppCompatActivity {
 
-    private GLHttpVideoSurface mFPVVideoView;
+    private GLHttpVideoSurface mPreviewDualVideoView;
 
     //视频渲染
     private FPVVideoClient mFPVVideoClient;
 
     //usb连接实例
-    private SerialPortConnection mServiceConnection;
+    private SerialPortConnection mSerialPortConnection;
+
+    //FPV控制
+    private SerialPortControl mSerialPortControl;
 
     private Handler mainHanlder = new Handler(Looper.getMainLooper());
 
@@ -43,16 +49,23 @@ public class H12VideoSamplesActivity extends AppCompatActivity {
     }
 
     private void initView(){
-        mFPVVideoView = findViewById(R.id.fPVVideoView);
-        mFPVVideoView.init();
+        mPreviewDualVideoView = findViewById(R.id.fPVVideoView);
+        mPreviewDualVideoView.init();
+
+        findViewById(R.id.btnTest).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSerialPortControl.AkeyControl(PTZAction.DOWN);
+            }
+        });
     }
 
     private void init(){
         //硬件串口实例
-        mServiceConnection = SerialPortConnection.newBuilder("/dev/ttyHS0",921600)
+        mSerialPortConnection = SerialPortConnection.newBuilder("/dev/ttyHS0",921600)
                 .flags(1 << 13)
                 .build();
-        mServiceConnection.setDelegate(new SerialPortConnection.Delegate() {
+        mSerialPortConnection.setDelegate(new SerialPortConnection.Delegate() {
             @Override
             public void received(byte[] bytes, int size) {
                 if(mFPVVideoClient != null){
@@ -85,39 +98,41 @@ public class H12VideoSamplesActivity extends AppCompatActivity {
             //视频相关
             @Override
             public void renderI420(byte[] frame, int width, int height) {
-                mFPVVideoView.renderI420(frame,width,height);
+                mPreviewDualVideoView.renderI420(frame,width,height);
             }
 
             @Override
             public void setVideoSize(int picWidth, int picHeight) {
-                mFPVVideoView.setVideoSize(picWidth,picHeight,mainHanlder);
+                mPreviewDualVideoView.setVideoSize(picWidth,picHeight,mainHanlder);
             }
 
             @Override
             public void resetView() {
-                mFPVVideoView.resetView(mainHanlder);
+                mPreviewDualVideoView.resetView(mainHanlder);
             }
         });
 
         try {
             //打开串口
-            mServiceConnection.openConnection();
+            mSerialPortConnection.openConnection();
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        mSerialPortControl = new SerialPortControl(mSerialPortConnection);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(mServiceConnection != null){
+        if(mSerialPortConnection != null){
             try {
-                mServiceConnection.closeConnection();
+                mSerialPortConnection.closeConnection();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        mServiceConnection = null;
+        mSerialPortConnection = null;
         if(mFPVVideoClient != null){
             mFPVVideoClient.stopPlayback();
         }

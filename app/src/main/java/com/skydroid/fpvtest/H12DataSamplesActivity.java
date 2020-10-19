@@ -13,7 +13,7 @@ import com.skydroid.fpvlibrary.serial.SerialPortConnection;
 import java.io.IOException;
 
 public class H12DataSamplesActivity extends AppCompatActivity {
-    //usb连接实例
+    //硬件串口连接实例
     private SerialPortConnection mServiceConnection;
 
     @Override
