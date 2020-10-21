@@ -62,7 +62,7 @@ public class H12VideoSamplesActivity extends AppCompatActivity {
 
     private void init(){
         //硬件串口实例
-        mSerialPortConnection = SerialPortConnection.newBuilder("/dev/ttyHS0",921600)
+        mSerialPortConnection = SerialPortConnection.newBuilder("/dev/ttyHS0",4000000)
                 .flags(1 << 13)
                 .build();
         mSerialPortConnection.setDelegate(new SerialPortConnection.Delegate() {

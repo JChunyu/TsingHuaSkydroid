@@ -34,7 +34,7 @@ public class H12DataSamplesActivity extends AppCompatActivity {
 
     private void init(){
         //硬件串口实例
-        mServiceConnection = SerialPortConnection.newBuilder("/dev/ttyHSL1",921600)
+        mServiceConnection = SerialPortConnection.newBuilder("/dev/ttyHS1",921600)
                 .flags(1 << 13)
                 .build();
         mServiceConnection.setDelegate(new SerialPortConnection.Delegate() {
