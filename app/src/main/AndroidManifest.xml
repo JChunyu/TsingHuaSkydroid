@@ -20,6 +20,7 @@
         <activity android:name=".UsbSerialActivity"/>
         <activity android:name=".H12VideoSamplesActivity"/>
         <activity android:name=".H12DataSamplesActivity"/>
+        <activity android:name=".H30DataSamplesActivity"/>
     </application>
 
 </manifest>

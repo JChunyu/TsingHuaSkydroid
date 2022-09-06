@@ -51,5 +51,11 @@ public class  MainActivity extends AppCompatActivity {
                 H12DataSamplesActivity.start(context);
             }
         });
+        findViewById(R.id.btn_h30_data).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                H30DataSamplesActivity.start(context);
+            }
+        });
     }
 }

@@ -27,5 +27,10 @@
         android:layout_height="wrap_content"
         android:text="H12数传"
         />
-
+    <Button
+        android:id="@+id/btn_h30_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="H30数传"
+        />
 </LinearLayout>
