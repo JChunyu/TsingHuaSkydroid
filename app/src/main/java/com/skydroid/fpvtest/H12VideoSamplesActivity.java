@@ -36,6 +36,8 @@ public class H12VideoSamplesActivity extends AppCompatActivity {
 
     private Handler mainHanlder = new Handler(Looper.getMainLooper());
 
+    private boolean isSetTime = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +100,11 @@ public class H12VideoSamplesActivity extends AppCompatActivity {
             //视频相关
             @Override
             public void renderI420(byte[] frame, int width, int height) {
+                if (!isSetTime && mSerialPortControl!= null){
+                    isSetTime = true;
+                    //设置相机时间
+                    mSerialPortControl.setTime(System.currentTimeMillis());
+                }
                 mPreviewDualVideoView.renderI420(frame,width,height);
             }
 
