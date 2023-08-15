@@ -18,19 +18,26 @@
         android:id="@+id/btn_h12_video"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="H12图传"
+        android:text="图传显示"
         />
 
     <Button
         android:id="@+id/btn_h12_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="H12数传"
+        android:text="数传解析"
         />
     <Button
         android:id="@+id/btn_h30_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="H30数传"
+        />
+
+    <Button
+        android:id="@+id/btn_frequency"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="对频"
         />
 </LinearLayout>
