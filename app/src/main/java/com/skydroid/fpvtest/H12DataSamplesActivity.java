@@ -23,7 +23,6 @@ public class H12DataSamplesActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_h12data_samples);
-
         initView();
         init();
     }

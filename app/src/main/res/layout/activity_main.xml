@@ -28,16 +28,10 @@
         android:text="数传解析"
         />
     <Button
+        android:visibility="gone"
         android:id="@+id/btn_h30_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="H30数传"
-        />
-
-    <Button
-        android:id="@+id/btn_frequency"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="对频"
         />
 </LinearLayout>

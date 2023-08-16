@@ -40,8 +40,5 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.btn_h30_data).setOnClickListener {
             H30DataSamplesActivity.start(this@MainActivity)
         }
-        findViewById<Button>(R.id.btn_frequency).setOnClickListener {
-            startActivity(Intent(this@MainActivity, FrequencyActivity::class.java))
-        }
     }
 }
