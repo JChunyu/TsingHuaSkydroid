@@ -1,4 +1,4 @@
-package com.skydroid.fpvtest;
+package com.skydroid.fpvtest.utils;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +19,7 @@ import com.skydroid.fpvlibrary.usbserial.UsbSerialControl;
 import com.skydroid.fpvlibrary.utils.BusinessUtils;
 import com.skydroid.fpvlibrary.video.FPVVideoClient;
 import com.skydroid.fpvlibrary.widget.GLHttpVideoSurface;
+import com.skydroid.fpvtest.R;
 
 import java.util.List;
 

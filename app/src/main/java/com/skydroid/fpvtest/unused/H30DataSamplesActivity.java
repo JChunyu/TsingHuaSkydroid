@@ -1,4 +1,4 @@
-package com.skydroid.fpvtest;
+package com.skydroid.fpvtest.unused;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.skydroid.fpvlibrary.serial.SerialPortConnection;
+import com.skydroid.fpvtest.R;
 
 import java.io.IOException;
 

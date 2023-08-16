@@ -59,21 +59,6 @@
         android:layout_height="100dp"/>
 
     <ImageView
-        android:id="@+id/btnTest"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnRecord"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="15dp"
-        android:src="@drawable/icon_down_arrow"
-        android:layout_marginBottom="15dp"
-        app:layout_constraintVertical_chainStyle="packed"
-
-        android:text="一键向下"/>
-
-    <ImageView
         android:id="@+id/btnRecord"
         android:layout_width="30dp"
         android:layout_height="30dp"
@@ -81,7 +66,8 @@
         android:layout_marginTop="15dp"
         android:layout_marginBottom="15dp"
         android:src="@drawable/icon_play"
-        app:layout_constraintTop_toBottomOf="@id/btnTest"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/btnScreenShot"
         android:text="录像"/>

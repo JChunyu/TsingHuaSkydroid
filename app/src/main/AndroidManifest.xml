@@ -15,11 +15,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".unused.MainActivity"
             android:screenOrientation="landscape"
             android:exported="true">
         </activity>
-        <activity android:name=".UsbSerialActivity" />
+        <activity android:name=".utils.UsbSerialActivity" />
         <activity android:name=".H12VideoSamplesActivity"
             android:screenOrientation="landscape"
             android:exported="true">
@@ -29,8 +29,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".H12DataSamplesActivity" />
-        <activity android:name=".H30DataSamplesActivity" />
+        <activity android:name=".unused.H12DataSamplesActivity" />
+        <activity android:name=".unused.H30DataSamplesActivity" />
     </application>
 
 </manifest>

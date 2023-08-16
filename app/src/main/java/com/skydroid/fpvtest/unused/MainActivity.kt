@@ -1,13 +1,13 @@
-package com.skydroid.fpvtest
+package com.skydroid.fpvtest.unused
 
 import android.Manifest
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.skydroid.fpvtest.H12VideoSamplesActivity
+import com.skydroid.fpvtest.R
+import com.skydroid.fpvtest.utils.UsbSerialActivity
 
 class MainActivity : AppCompatActivity() {
 

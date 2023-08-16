@@ -55,9 +55,9 @@ class H12VideoSamplesActivity : AppCompatActivity() {
         mPreviewDualVideoView = findViewById(R.id.fPVVideoView)
         mPreviewDualVideoView?.init()
         stateTv = findViewById(R.id.stateTv)
-        findViewById<View>(R.id.btnTest).setOnClickListener {
-            mSerialPortControl?.AkeyControl(PTZAction.DOWN)
-        }
+//        findViewById<View>(R.id.btnTest).setOnClickListener {
+//            mSerialPortControl?.AkeyControl(PTZAction.DOWN)
+//        }
         findViewById<View>(R.id.btnRecord).setOnClickListener {
             // todo
         }
