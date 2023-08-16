@@ -63,7 +63,11 @@ class H12VideoSamplesActivity : AppCompatActivity() {
         }
         findViewById<View>(R.id.btnScreenShot).setOnClickListener {
             // 截图
-            ScreenShotsUtil.captureWindow(this@H12VideoSamplesActivity, "ScreenShot" + System.currentTimeMillis() + ".jpeg", true)
+            if (ScreenShotsUtil.captureWindow(this@H12VideoSamplesActivity, "ScreenShot" + System.currentTimeMillis() + ".jpeg", true)) {
+                Toast.makeText(this@H12VideoSamplesActivity, "截屏已保存到相册", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(this@H12VideoSamplesActivity, "截屏失败，请重试", Toast.LENGTH_LONG).show()
+            }
         }
 
         findViewById<View>(R.id.frequencyTv).setOnClickListener{
