@@ -42,7 +42,7 @@ class H12VideoSamplesActivity : AppCompatActivity() {
 
     private var stateTv: TextView? = null
 
-    private lateinit var frequencyManager: FrequencyManager
+    private var frequencyManager: FrequencyManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,9 +55,6 @@ class H12VideoSamplesActivity : AppCompatActivity() {
         mPreviewDualVideoView = findViewById(R.id.fPVVideoView)
         mPreviewDualVideoView?.init()
         stateTv = findViewById(R.id.stateTv)
-//        findViewById<View>(R.id.btnTest).setOnClickListener {
-//            mSerialPortControl?.AkeyControl(PTZAction.DOWN)
-//        }
         findViewById<View>(R.id.btnRecord).setOnClickListener {
             // todo
         }
@@ -71,18 +68,27 @@ class H12VideoSamplesActivity : AppCompatActivity() {
         }
 
         findViewById<View>(R.id.frequencyTv).setOnClickListener{
+            if (frequencyManager == null) {
+                frequencyManager = FrequencyManager(this@H12VideoSamplesActivity)
+                frequencyManager?.start()
+            }
             KeyManager.action(RemoteControllerKey.KeyRequestPairing){ e ->
                 if (e == null){
-                    Toast.makeText(this@H12VideoSamplesActivity, "对频成功", Toast.LENGTH_SHORT).show()
+                    this@H12VideoSamplesActivity.window.decorView.post {
+                        Toast.makeText(this@H12VideoSamplesActivity, "对频成功", Toast.LENGTH_SHORT).show()
+                    }
                 }else{
-                    Toast.makeText(this@H12VideoSamplesActivity, "对频失败", Toast.LENGTH_SHORT).show()
-                    Log.e("Frequency", "$e")
+                    this@H12VideoSamplesActivity.window.decorView.post {
+                        Toast.makeText(this@H12VideoSamplesActivity, "对频失败，请确认接收机进入对频模式，绿灯闪烁", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
 
         DataTranslateManager.addDataListener {
-            stateTv?.text = "数传结果：$it"
+            this@H12VideoSamplesActivity.window.decorView.post {
+                stateTv?.text = "数传结果：$it"
+            }
         }
     }
 
@@ -100,7 +106,6 @@ class H12VideoSamplesActivity : AppCompatActivity() {
                 mFPVVideoClient?.startPlayback()
             }
         })
-
 
         //渲染视频相关
         mFPVVideoClient = FPVVideoClient()
@@ -138,15 +143,16 @@ class H12VideoSamplesActivity : AppCompatActivity() {
             e.printStackTrace()
         }
         mSerialPortControl = SerialPortControl(mSerialPortConnection)
-
-        frequencyManager = FrequencyManager(this)
-        frequencyManager.start()
+        if (frequencyManager == null) {
+            frequencyManager = FrequencyManager(this)
+        }
+        frequencyManager?.start()
         DataTranslateManager.init()
     }
 
     override fun onDestroy() {
         DataTranslateManager.release()
-        frequencyManager.release()
+        frequencyManager?.release()
         if (mSerialPortConnection != null) {
             try {
                 mSerialPortConnection!!.closeConnection()

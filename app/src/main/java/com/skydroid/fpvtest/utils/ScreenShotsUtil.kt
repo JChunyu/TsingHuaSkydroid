@@ -8,6 +8,7 @@ import android.graphics.Rect
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import android.widget.Toast
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -36,8 +37,11 @@ object ScreenShotsUtil {
         view.isDrawingCacheEnabled = false
         view.destroyDrawingCache()
         bitmap?.let {
-            val fileName: String = Environment.getExternalStorageDirectory().path + "/DCIM/Screenshots/" + fileName
+            val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
+            path.mkdirs()
+            val fileName: String = path.path + "/Screenshots/" + fileName
             val file = File(fileName)
+            Log.i("ScreenShotUtils", "$file")
             if (file.exists()) {
                 file.delete()
             }
@@ -61,14 +65,23 @@ object ScreenShotsUtil {
                 return true
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()
+                activity.window.decorView.post {
+                    Toast.makeText(activity, "FileNotFoundException: $fileName", Toast.LENGTH_LONG).show()
+                }
                 bitmap.recycle()
                 return false
             } catch (e: IOException) {
                 e.printStackTrace()
+                activity.window.decorView.post {
+                    Toast.makeText(activity, "IOException", Toast.LENGTH_LONG).show()
+                }
                 bitmap.recycle()
                 return false
             }
         } ?: kotlin.run {
+            activity.window.decorView.post {
+                Toast.makeText(activity, "bitmap = null", Toast.LENGTH_LONG).show()
+            }
             Log.d("saveBitmap", "bitmap = null")
             return false
         }
