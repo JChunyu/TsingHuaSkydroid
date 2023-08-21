@@ -5,6 +5,7 @@ import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Rect
+import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
@@ -38,9 +39,11 @@ object ScreenShotsUtil {
         view.destroyDrawingCache()
         bitmap?.let {
             val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
-            path.mkdirs()
-            val fileName: String = path.path + "/Screenshots/" + fileName
-            val file = File(fileName)
+            if (!path.exists()) {
+                path.mkdirs()
+            }
+            val filePath: String = path.path + File.separator + "Screenshots" + File.separator
+            val file = File(filePath, fileName)
             Log.i("ScreenShotUtils", "$file")
             if (file.exists()) {
                 file.delete()
@@ -51,15 +54,24 @@ object ScreenShotsUtil {
                 if (bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)) {
                     out.flush()
                     out.close()
-
-                    val values = ContentValues()
-                    values.put(MediaStore.Images.Media.DATA, file.absolutePath)
-                    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-                    val uri = activity.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
-                    // 发送广播，通知刷新图库的显示
-                    activity.sendBroadcast(
-                        Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri)
+                    MediaStore.Images.Media.insertImage(
+                        activity.contentResolver,
+                        file.absolutePath,
+                        fileName,
+                        null
                     )
+//                    val values = ContentValues()
+//                    values.put(MediaStore.Images.Media.DATA, file.absolutePath)
+//                    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+//                    val uri = activity.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+//                    // 发送广播，通知刷新图库的显示
+//                    activity.sendBroadcast(
+//                        Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri)
+//                    )
+
+                    val localUri = Uri.fromFile(file)
+                    val intent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, localUri)
+                    activity.sendBroadcast(intent)
                 }
                 bitmap.recycle()
                 return true
