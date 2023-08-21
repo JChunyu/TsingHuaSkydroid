@@ -42,7 +42,7 @@ object ScreenShotsUtil {
             if (!path.exists()) {
                 path.mkdirs()
             }
-            val filePath: String = path.path + File.separator + "Screenshots" + File.separator
+            val filePath: String = path.path
             val file = File(filePath, fileName)
             Log.i("ScreenShotUtils", "$file")
             if (file.exists()) {
