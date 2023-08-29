@@ -98,4 +98,19 @@ object ScreenShotsUtil {
             return false
         }
     }
+
+//    fun screenshot(view: SurfaceView, handler: Handler): Bitmap {
+//        val width = view.width
+//        val height = view.height
+//        val screenBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+//        PixelCopy.request(view, screenBitmap,
+//            {
+//                if (PixelCopy.SUCCESS == it) {
+//                    Log.i("ScreenShotUtils", "PixelCopy.SUCCESS")
+//                } else {
+//                    Log.i("ScreenShotUtils", "PixelCopy.SUCCESS")
+//                }
+//            }, handler)
+//        return screenBitmap
+//    }
 }
