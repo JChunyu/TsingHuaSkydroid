@@ -1,21 +1,30 @@
 package com.skydroid.fpvtest
 
+import android.R.attr
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.media.projection.MediaProjection
+import android.media.projection.MediaProjectionManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.skydroid.fpvlibrary.enums.PTZAction
 import com.skydroid.fpvlibrary.serial.SerialPortConnection
 import com.skydroid.fpvlibrary.serial.SerialPortControl
 import com.skydroid.fpvlibrary.video.FPVVideoClient
 import com.skydroid.fpvlibrary.widget.GLHttpVideoSurface
 import com.skydroid.fpvtest.frequency.FrequencyManager
+import com.skydroid.fpvtest.unused.MainActivity
 import com.skydroid.fpvtest.utils.DataTranslateManager
 import com.skydroid.fpvtest.utils.ScreenShotsUtil
 import com.skydroid.rcsdk.KeyManager
@@ -44,6 +53,11 @@ class H12VideoSamplesActivity : AppCompatActivity() {
 
     private var frequencyManager: FrequencyManager? = null
 
+    private var mMediaProjectionManager: MediaProjectionManager? = null
+
+    private lateinit var recordBtn: ImageView
+
+    private var isRecording = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_h12video_samples)
@@ -55,8 +69,17 @@ class H12VideoSamplesActivity : AppCompatActivity() {
         mPreviewDualVideoView = findViewById(R.id.fPVVideoView)
         mPreviewDualVideoView?.init()
         stateTv = findViewById(R.id.stateTv)
-        findViewById<View>(R.id.btnRecord).setOnClickListener {
+        recordBtn = findViewById<ImageView>(R.id.btnRecord)
+        recordBtn.setOnClickListener {
             // todo
+            isRecording = !isRecording
+            if (isRecording) {
+                recordBtn.setImageResource(R.drawable.icon_stop)
+                startRecord()
+            } else {
+                recordBtn.setImageResource(R.drawable.icon_play)
+                stopRecord()
+            }
         }
         findViewById<View>(R.id.btnScreenShot).setOnClickListener {
             // 截图
@@ -148,6 +171,7 @@ class H12VideoSamplesActivity : AppCompatActivity() {
         }
         frequencyManager?.start()
         DataTranslateManager.init()
+        mMediaProjectionManager = getSystemService(MEDIA_PROJECTION_SERVICE) as? MediaProjectionManager
     }
 
     override fun onDestroy() {
@@ -168,8 +192,41 @@ class H12VideoSamplesActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode === REQUEST_CODE && resultCode === RESULT_OK) {
+            try {
+                Toast.makeText(this, "允许录屏", Toast.LENGTH_SHORT).show()
+                val service = Intent(this, ScreenRecordService::class.java)
+                service.putExtra("resultCode", resultCode)
+                service.putExtra("data", data)
+                startService(service)
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+        } else {
+            Toast.makeText(this, "拒绝录屏", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun startRecord() {
+        createScreenCapture()
+    }
+
+    fun stopRecord() {
+        val service = Intent(this, ScreenRecordService::class.java)
+        stopService(service)
+    }
+
+    private fun createScreenCapture() {
+        val captureIntent = mMediaProjectionManager!!.createScreenCaptureIntent()
+        startActivityForResult(captureIntent, REQUEST_CODE)
+    }
+
 
     companion object {
+
+        private const val REQUEST_CODE = 1
         fun start(context: Context) {
             context.startActivity(Intent(context, H12VideoSamplesActivity::class.java))
         }
